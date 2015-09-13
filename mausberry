@@ -1,0 +1,31 @@
+#!/bin/bash
+
+GPIO_OUT=23
+GPIO_IN=24
+DELAY=0
+
+if [ -f /etc/default/mausberry ]; then
+    . /etc/default/mausberry
+fi
+
+power=$(cat /sys/class/gpio/gpio$GPIO_OUT/value)
+uptime=$(</proc/uptime)
+current=${uptime%%.*}
+minute=$((DELAY * 60))
+
+if [ $power = 1 ]; then
+    if [ $minute = 0 ]; then
+        /sbin/shutdown now -h
+    else
+        if [ -f /tmp/mausberry ]; then
+            delayed=$(</tmp/mausberry)
+            if [ "$((current - delayed))" -gt "$minute" ]; then
+                /sbin/shutdown now -h
+            fi
+        else
+            echo $current > /tmp/mausberry
+        fi
+    fi
+else
+    rm -f /tmp/mausberry
+fi
