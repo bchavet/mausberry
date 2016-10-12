@@ -8,9 +8,11 @@ My approach is designed to run using cron, which of course means that the Pi wil
 
 ### 1. Clone this repo onto your Raspberry Pi
 
+Either copy, move, or symlink the `mausberry` script to `/usr/local/sbin/mausberry`
+
 ### 2. Add the following to `/etc/rc.local`
 
-````sh
+```sh
 GPIO_OUT=23
 GPIO_IN=24
 
@@ -23,7 +25,7 @@ echo "in" > /sys/class/gpio/gpio$GPIO_OUT/direction
 echo "$GPIO_IN" > /sys/class/gpio/export
 echo "out" > /sys/class/gpio/gpio$GPIO_IN/direction
 echo "1" > /sys/class/gpio/gpio$GPIO_IN/value
-````
+```
 
 This activates the GPIO pins that are connected to the Mausberry switch.
 
